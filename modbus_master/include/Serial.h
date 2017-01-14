@@ -34,7 +34,7 @@ inline Uint16 serial_rxBufferStatus();
 inline void serial_setSerialRxEnabled(bool status);
 inline void serial_setSerialTxEnabled(bool status);
 inline void serial_init(Serial *self);
-inline void serial_transmitData(Uint16 * data, Uint16 size);
+void serial_transmitData(Uint16 * data, Uint16 size);
 inline Uint16 serial_getRxBufferedWord();
 inline bool serial_getRxError();
 //define a function that returns a struct(Serial) type

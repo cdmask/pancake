@@ -22,7 +22,8 @@ __interrupt void cpu_timer1_isr(void);
                              -85.5050, -160.6969, -160.6969, -85.5050,   246.2019, 246.2019,
                                     0,         0,         0,        0,          0,        0};
  float32 length[6];            //this is the data to send to slave
- int16   scaled_length[6];
+ Uint16 scaled_length[6];
+ Uint16 string[12]={0};
 
 
 int i=0;
@@ -34,7 +35,7 @@ void main()
 
 //   float32 trans[3]={0};  //
 //   float32 orient[3]={0}; //
-
+    Uint16 *dataPtr;
 	InitSysCtrl();
 	DINT;
 
@@ -84,7 +85,7 @@ void main()
 
 
 	   //ConfigCpuTimer(&CpuTimer1, 100, 2000);// 500 points, 2000us between two points, period 1s, f 1Hz
-	   ConfigCpuTimer(&CpuTimer1, 100, 4000);  // period 2s, f 0.5Hz
+	   ConfigCpuTimer(&CpuTimer1, 100, 400);  // period 2s, f 0.5Hz
 
 	#endif
 	// To ensure precise timing, use write-only instructions to write to the entire register. Therefore, if any
@@ -150,7 +151,12 @@ void main()
 	mb.requester.functionCode = MB_FUNC_WRITE_NREGISTERS;
 	mb.requester.addr	      = 0;                           //starting address
 	mb.requester.totalData    = 6;                           //how many registers we wish to read
-	mb.requester.generate(&mb);
+	//mb.requester.generate(&mb);
+	GpioDataRegs.GPASET.bit.GPIO20 = 1; // set 485 chip enable
+	dataPtr = scaled_length;
+	home_orient[2]=0;
+	for(i=0;i<12;i++)
+	    string[i]=0;
 	while(1)
 	{
 		//calculate six leg length, put them in holding registers and write slave registers.
@@ -158,11 +164,22 @@ void main()
         {
             if_ref_updated=0;
             calc_rod_length(home_trans,home_orient);
+            int index=0;
+            // get the to be transmitted string
+            for(i=0; i < 6; i++){
+                            string[index++] = (*(dataPtr + i) & 0xFF00) >> 8;
+                            string[index++] = (*(dataPtr + i) & 0x00FF);
+            }
+            //TODO need to set up serial for sending data
+            //Baudrade etc.
+            serial_transmitData(string,12);
+
+            //mb.requester.generate(&mb);
+            //mb.loopStates(&mb);
 
         }
 
-	    mb.requester.generate(&mb);
-		mb.loopStates(&mb);
+
 
 	}
 

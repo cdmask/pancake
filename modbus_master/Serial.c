@@ -161,7 +161,7 @@ void serial_init(Serial *self){
 }
 
 // Transmit variable data based on passed size
-void serial_transmitData(Uint16 * data, Uint16 size){          //TODO  how this works?
+void serial_transmitData(Uint16 *data, Uint16 size){          //TODO  how this works?
 	static unsigned short i = 0;                               //
 	SERIAL_DEBUG();                                            //
 

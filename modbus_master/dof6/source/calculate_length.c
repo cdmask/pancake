@@ -60,16 +60,16 @@ for(j=0;j<6;j++)
 	{
 		leg_vector[6*i+j] = trans[i] + Rbpi[6*i+j] -servo_attach_B[6*i+j];
 	}
-
 }
 
 // calculate leg length and save them on the modbus data map
-dataPtr = (char *)&(mb.holdingRegisters);
+//dataPtr = (char *)&(mb.holdingRegisters);
+
 for(j=0;j<6;j++)
     {
         length[j]=sqrt(pow(leg_vector[j],2)+pow(leg_vector[j+6],2)+pow(leg_vector[j+2*6],2));
-        scaled_length[j] =(length[j]*10);// 保留一位小数
-        dataPtr[j]=scaled_length[j];
+        scaled_length[j] =(length[j]*10);// keep one decimal
+        //dataPtr[j]=scaled_length[j];
     }
 
 }
