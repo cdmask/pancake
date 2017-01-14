@@ -3,6 +3,7 @@
 extern float32 rod_attach_P[18];
 extern float32 servo_attach_B[18];
 extern float32 length[6];
+extern float32 trans[3],orient[3];
 
 void calc_rod_length(float32 trans[3],float32 orient[3])
 {
@@ -53,7 +54,7 @@ for(j=0;j<6;j++)
 {
 	for(i=0;i<3;i++)
 	{
-		leg_vector[6*i+j] = trans[i] + Rbpi[6*i+j] -servo_attach_B[6*i+j] ;
+		leg_vector[6*i+j] = trans[i] + Rbpi[6*i+j] -servo_attach_B[6*i+j];
 	}
 
 }
@@ -63,4 +64,5 @@ for(j=0;j<6;j++)
     {
         length[j]=sqrt(pow(leg_vector[j],2)+pow(leg_vector[j+6],2)+pow(leg_vector[j+2*6],2));
     }
+
 }

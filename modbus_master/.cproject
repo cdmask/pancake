@@ -59,13 +59,9 @@
 								<option id="com.ti.ccstudio.buildDefinitions.C2000_16.9.linkerID.MAP_FILE.917464066" name="Link information (map) listed into &lt;file&gt; (--map_file, -m)" superClass="com.ti.ccstudio.buildDefinitions.C2000_16.9.linkerID.MAP_FILE" value="&quot;${ProjName}.map&quot;" valueType="string"/>
 								<option id="com.ti.ccstudio.buildDefinitions.C2000_16.9.linkerID.LIBRARY.1951191721" name="Include library file or command file as input (--library, -l)" superClass="com.ti.ccstudio.buildDefinitions.C2000_16.9.linkerID.LIBRARY" valueType="libs">
 									<listOptionValue builtIn="false" value="rts2800_fpu32.lib"/>
-									<listOptionValue builtIn="false" value="&quot;D:\ti\controlSUITE\device_support\f2833x\v142\DSP2833x_common\cmd\28335_RAM_lnk.cmd&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\ti\controlSUITE\device_support\f2833x\v142\DSP2833x_headers\cmd\DSP2833x_Headers_nonBIOS.cmd&quot;"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.C2000_16.9.linkerID.SEARCH_PATH.317052836" name="Add &lt;dir&gt; to library search path (--search_path, -i)" superClass="com.ti.ccstudio.buildDefinitions.C2000_16.9.linkerID.SEARCH_PATH" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;D:\ti\controlSUITE\libs\math\FPUfastRTS\V100\lib&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\ti\controlSUITE\device_support\f2833x\v142\DSP2833x_common\cmd&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\ti\controlSUITE\device_support\f2833x\v142\DSP2833x_headers\cmd&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${CG_TOOL_ROOT}/lib&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${CG_TOOL_ROOT}/include&quot;"/>
 								</option>
@@ -85,7 +81,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="28335_RAM_lnk.cmd" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -177,4 +173,12 @@
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="null.endianPreference"/>
 	<storageModule moduleId="cpuFamily"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/modbus_master"/>
+		</configuration>
+		<configuration configurationName="Release">
+			<resource resourceType="PROJECT" workspacePath="/modbus_master"/>
+		</configuration>
+	</storageModule>
 </cproject>

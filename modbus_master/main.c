@@ -6,16 +6,24 @@
 #include "calc_rod_length.h"
 
 __interrupt void cpu_timer1_isr(void);
+
+
+// 6dof data
  float32 test_sine_ref[500]={0};
  float32 real_sine_ref=0;
- float32 rod_attach_P[18]={  26.0472,  -26.0472,   -140.9539, -114.9067,  114.9067,  140.9539,
-                            -147.7212, -147.7212,   51.3030,   96.4181,   96.4181,   51.3030,
-                                    0,         0,         0,         0,         0,         0};
+ float32 home_trans[3]={0,0,291.8};
+ float32 home_orient[3]={0};
+ float32 trans[3],orient[3];
+ float32 rod_attach_P[18]  ={  140.9539, 26.0472,  -26.0472,   -140.9539, -114.9067,  114.9067,
+                               51.3030, -147.7212, -147.7212,   51.3030,   96.4181,   96.4181,
+                                   0,         0,         0,         0,         0,         0};
 
  float32 servo_attach_B[18]={ 234.9232, 191.5111, -191.5111, -234.9232, -43.4120,  43.4120,
                              -85.5050, -160.6969, -160.6969, -85.5050,   246.2019, 246.2019,
                                     0,         0,         0,        0,          0,        0};
  float32 length[6];            //this is the data to send to slave
+
+
 
 int i=0;
 int if_ref_updated=0;
@@ -108,7 +116,7 @@ void main()
 
 	// Enable global Interrupts and higher priority real-time debug events:
 
-	   // EINT;   // Enable Global interrupt INTM
+	   EINT;   // Enable Global interrupt INTM
 	   ERTM;   // Enable Global real-time interrupt DBGM
 
 //TODO when did the timer start?
@@ -149,7 +157,7 @@ void main()
         if(if_ref_updated==1)
         {
             if_ref_updated=0;
-            //calc_rod_length(trans,orient);
+            calc_rod_length(home_trans,home_orient);
         }
 
 	    mb.requester.generate(&mb);
@@ -164,7 +172,7 @@ __interrupt void cpu_timer1_isr(void)
    CpuTimer1.InterruptCount++;
    i++;
    test_sine_ref[i] = (float)(sine_table[i])/4096;// use float without () throws error, expected an expression
-   real_sine_ref =(float)(sine_table[i])/4096;
+   real_sine_ref    = (float)(sine_table[i])/4096;
    if(i==499)
        {
            i=0;
