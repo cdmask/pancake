@@ -64,7 +64,8 @@ struct ModbusInputsMap{
 ModbusInputsMap construct_ModbusInputsMap();
 #endif
 
-#if MB_HOLDING_REGISTERS_ENABLED
+// If use 32bit register we define 32bit variable
+#if (MB_HOLDING_REGISTERS_ENABLED&&MB_32_BITS_REGISTERS)
 typedef struct ModbusHoldingRegistersMap ModbusHoldingRegistersMap;
 struct ModbusHoldingRegistersMap {
 	float32 dummy0;
@@ -81,8 +82,26 @@ struct ModbusHoldingRegistersMap {
 };
 
 ModbusHoldingRegistersMap construct_ModbusHoldingRegistersMap();
-#endif
+#else
+//else we define 16 bit variable
+typedef struct ModbusHoldingRegistersMap ModbusHoldingRegistersMap;
+struct ModbusHoldingRegistersMap {
+    int16 dummy0;
+    int16 dummy1;
+    int16 dummy2;
+    int16 dummy3;
+    int16 dummy4;
+    int16 dummy5;
+    int16 dummy6;
+    int16 dummy7;
+    int16 dummy8;
+    int16 dummy9;
+    int16 dummy10;
+};
 
+ModbusHoldingRegistersMap construct_ModbusHoldingRegistersMap();
+
+#endif
 #if MB_INPUT_REGISTERS_ENABLED
 typedef struct ModbusInputRegistersMap ModbusInputRegistersMap;
 struct ModbusInputRegistersMap {

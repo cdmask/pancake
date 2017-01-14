@@ -146,7 +146,7 @@ void requester_generate(ModbusMaster *master) {
 			if(requester.totalData%8==0)
 				master->dataRequest.content[MB_WRITE_N_BYTES]         = (requester.totalData)/8;
 			else
-			master->dataRequest.content[MB_WRITE_N_BYTES]         = (requester.totalData)/8+1;
+			master->dataRequest.content[MB_WRITE_N_BYTES]         = (requester.totalData)/8+1;// todo?
 
 			master->dataRequest.contentIdx = MB_WRITE_N_BYTES+1;//TODO??
 			for(i =0; i < requester.totalData; i++){
@@ -171,20 +171,23 @@ void requester_generate(ModbusMaster *master) {
 
 			master->dataRequest.contentIdx = MB_WRITE_N_BYTES+1;
 
+			#if MB_32_BITS_REGISTERS == true //write 32 bit
 			for(i=0; i < requester.totalData*2; i++) {                                                                                      //check
 				Uint16 padding = i + requester.addr*2; //data is here
-				#if MB_32_BITS_REGISTERS == true                                                                                       //TODO why do we need four assignment?
-				//write 32 bit
 				master->dataRequest.content[master->dataRequest.contentIdx++] = (*(dataPtr + padding + 1) & 0xFF00) >> 8;
 				master->dataRequest.content[master->dataRequest.contentIdx++] = (*(dataPtr + padding + 1) & 0x00FF);
 				master->dataRequest.content[master->dataRequest.contentIdx++] = (*(dataPtr + padding + 0) & 0xFF00) >> 8;
 				master->dataRequest.content[master->dataRequest.contentIdx++] = (*(dataPtr + padding + 0) & 0x00FF);
-				i++;                                                                                                                  //TODO?
-				#else
-				master->dataRequest.content[master->dataRequest.contentIdx++] = (*(dataPtr + padding) & 0xFF00) >> 8;
-				master->dataRequest.content[master->dataRequest.contentIdx++] = (*(dataPtr + padding) & 0x00FF);
-				#endif
+				i++;
 			}
+            #else
+				//16 BIT REG
+				for(i=0; i < requester.totalData; i++){
+				Uint16 padding = i + requester.addr;
+			    master->dataRequest.content[master->dataRequest.contentIdx++] = (*(dataPtr + padding) & 0xFF00) >> 8;
+				master->dataRequest.content[master->dataRequest.contentIdx++] = (*(dataPtr + padding) & 0x00FF);
+			}
+           #endif
 
 
 		}

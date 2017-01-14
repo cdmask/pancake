@@ -13,6 +13,7 @@
 #include <math.h>
 #include"DataTypes.h"
 #include "sine_func.h"
+#include "ModbusMaster.h"
 /* Function Declarations */
 void calc_rod_length(float32 trans[3], float32 orient[3]);
 #endif

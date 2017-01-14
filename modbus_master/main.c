@@ -22,7 +22,7 @@ __interrupt void cpu_timer1_isr(void);
                              -85.5050, -160.6969, -160.6969, -85.5050,   246.2019, 246.2019,
                                     0,         0,         0,        0,          0,        0};
  float32 length[6];            //this is the data to send to slave
-
+ int16   scaled_length[6];
 
 
 int i=0;
@@ -124,13 +124,13 @@ void main()
 	mb = construct_ModbusMaster();     //initialize the data member and function pointers
 //what is this?
 //
-//
-	mb.holdingRegisters.dummy0 = 20.1;
-	mb.holdingRegisters.dummy1 = 23.13;
-	mb.holdingRegisters.dummy2 = 100.1;
-	mb.holdingRegisters.dummy3 = 21.2;
-	mb.holdingRegisters.dummy4 = 100.5;
-	mb.holdingRegisters.dummy5 = 100.555;
+//  //this is floating point data!
+	mb.holdingRegisters.dummy0 = 0X0A;
+	mb.holdingRegisters.dummy1 = 0X0B;
+	mb.holdingRegisters.dummy2 = 3;
+	mb.holdingRegisters.dummy3 = 4;
+	mb.holdingRegisters.dummy4 = 5;
+	mb.holdingRegisters.dummy5 = 6;
 
 
 	mb.coils.dummy0=1;
@@ -147,9 +147,9 @@ void main()
 
 
 	mb.requester.slaveAddress = 0;
-	mb.requester.functionCode = MB_FUNC_READ_COIL;
-	mb.requester.addr	      = 1;                        //starting address
-	mb.requester.totalData    = 9;                           //how many registers we wish to read
+	mb.requester.functionCode = MB_FUNC_WRITE_NREGISTERS;
+	mb.requester.addr	      = 0;                           //starting address
+	mb.requester.totalData    = 6;                           //how many registers we wish to read
 	mb.requester.generate(&mb);
 	while(1)
 	{
@@ -158,6 +158,7 @@ void main()
         {
             if_ref_updated=0;
             calc_rod_length(home_trans,home_orient);
+
         }
 
 	    mb.requester.generate(&mb);

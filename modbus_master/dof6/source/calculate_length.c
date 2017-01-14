@@ -4,9 +4,13 @@ extern float32 rod_attach_P[18];
 extern float32 servo_attach_B[18];
 extern float32 length[6];
 extern float32 trans[3],orient[3];
+extern int16   scaled_length[6];
+extern ModbusMaster mb;
 
 void calc_rod_length(float32 trans[3],float32 orient[3])
 {
+    char * dataPtr;
+
 // define four translational matrix
 	float32 leg_vector[18];
     float32 rot_matrix[9];
@@ -59,10 +63,13 @@ for(j=0;j<6;j++)
 
 }
 
-// calculate leg length
+// calculate leg length and save them on the modbus data map
+dataPtr = (char *)&(mb.holdingRegisters);
 for(j=0;j<6;j++)
     {
         length[j]=sqrt(pow(leg_vector[j],2)+pow(leg_vector[j+6],2)+pow(leg_vector[j+2*6],2));
+        scaled_length[j] =(length[j]*10);// 保留一位小数
+        dataPtr[j]=scaled_length[j];
     }
 
 }

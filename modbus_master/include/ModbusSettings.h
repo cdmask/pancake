@@ -18,7 +18,7 @@
 // Memory map settings ====================================
 #if MB_LIBMODBUS_TESTS == false
 #define MB_DATA_MAP						"ModbusDataMap.h"
-#define MB_32_BITS_REGISTERS			true
+#define MB_32_BITS_REGISTERS			false
 #define MB_COILS_ENABLED				1
 #define MB_INPUTS_ENABLED				1
 #define	MB_HOLDING_REGISTERS_ENABLED	1
@@ -36,7 +36,7 @@
 
 // Change this according to your DSP
 //#define CPU_FREQ			150
-#define CPU_FREQ          100
+#define CPU_FREQ            100
 #define LOW_SPEED_CLOCK 	25000000
 //#define LOW_SPEED_CLOCK 	15000000
 //#define LOW_SPEED_CLOCK     37500000
