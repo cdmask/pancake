@@ -78,6 +78,7 @@ void main()
 
 	    // change this to work with SCI data transfer
 	    // make this interrupt time a bit higher than the time it takes to transfer the data once
+	   ConfigCpuTimer(&CpuTimer1, 150, 1000);
 
 
 	   //ConfigCpuTimer(&CpuTimer2, 150, 1000000);
