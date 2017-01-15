@@ -12,8 +12,8 @@ __interrupt void cpu_timer1_isr(void);
  float32 test_sine_ref[500]={0};
  float32 real_sine_ref=0;
  float32 home_trans[3]={0,0,291.8};
- float32 home_orient[3]={0};
- float32 trans[3],orient[3];
+ float32 home_orient[3]={0,0,0};
+ float32 trans[3]={0,0,0},orient[3]={0,0,0};
  float32 rod_attach_P[18]  ={  140.9539, 26.0472,  -26.0472,   -140.9539, -114.9067,  114.9067,
                                51.3030, -147.7212, -147.7212,   51.3030,   96.4181,   96.4181,
                                    0,         0,         0,         0,         0,         0};
@@ -23,19 +23,19 @@ __interrupt void cpu_timer1_isr(void);
                                     0,         0,         0,        0,          0,        0};
  float32 length[6];            //this is the data to send to slave
  Uint16 scaled_length[6];
- Uint16 string[12]={0};
+ Uint16 string[16]={0};
 
 
 int i=0;
+int interrupt_index=0;
 int if_ref_updated=0;
-ModbusMaster mb;
+//ModbusMaster mb;
+Serial SCIB;
+Uint16 *dataPtr;
 
 void main()
 {
 
-//   float32 trans[3]={0};  //
-//   float32 orient[3]={0}; //
-    Uint16 *dataPtr;
 	InitSysCtrl();
 	DINT;
 
@@ -75,7 +75,11 @@ void main()
 	// 150MHz CPU Freq, 1 second Period (in uSeconds)
 
 	   //ConfigCpuTimer(&CpuTimer0, 150, 1000000);
-	   ConfigCpuTimer(&CpuTimer1, 150, 4000);
+
+	    // change this to work with SCI data transfer
+	    // make this interrupt time a bit higher than the time it takes to transfer the data once
+
+
 	   //ConfigCpuTimer(&CpuTimer2, 150, 1000000);
 	#endif
 
@@ -85,7 +89,12 @@ void main()
 
 
 	   //ConfigCpuTimer(&CpuTimer1, 100, 2000);// 500 points, 2000us between two points, period 1s, f 1Hz
-	   ConfigCpuTimer(&CpuTimer1, 100, 400);  // period 2s, f 0.5Hz
+
+
+	   // change this to work with SCI data transfer
+	   // make this interrupt time a bit higher than the time it takes to transfer the data once
+	   ConfigCpuTimer(&CpuTimer1, 100, 10000);  // every 10ms one interrupt
+
 
 	#endif
 	// To ensure precise timing, use write-only instructions to write to the entire register. Therefore, if any
@@ -121,65 +130,17 @@ void main()
 	   ERTM;   // Enable Global real-time interrupt DBGM
 
 //TODO when did the timer start?
+    // setup
+	SCIB = construct_Serial();
+	SCIB.init(&SCIB);
 
-	mb = construct_ModbusMaster();     //initialize the data member and function pointers
-//what is this?
-//
-//  //this is floating point data!
-	mb.holdingRegisters.dummy0 = 0X0A;
-	mb.holdingRegisters.dummy1 = 0X0B;
-	mb.holdingRegisters.dummy2 = 3;
-	mb.holdingRegisters.dummy3 = 4;
-	mb.holdingRegisters.dummy4 = 5;
-	mb.holdingRegisters.dummy5 = 6;
-
-
-	mb.coils.dummy0=1;
-	mb.coils.dummy1=1;
-	mb.coils.dummy2=1;
-	mb.coils.dummy3=0;
-	mb.coils.dummy4=1;
-	mb.coils.dummy5=0;
-	mb.coils.dummy6=1;
-	mb.coils.dummy7=0;
-	mb.coils.dummy8=1;
-	mb.coils.dummy9=1;
-
-
-
-	mb.requester.slaveAddress = 0;
-	mb.requester.functionCode = MB_FUNC_WRITE_NREGISTERS;
-	mb.requester.addr	      = 0;                           //starting address
-	mb.requester.totalData    = 6;                           //how many registers we wish to read
-	//mb.requester.generate(&mb);
 	GpioDataRegs.GPASET.bit.GPIO20 = 1; // set 485 chip enable
-	dataPtr = scaled_length;
+
 	home_orient[2]=0;
 	for(i=0;i<12;i++)
 	    string[i]=0;
 	while(1)
 	{
-		//calculate six leg length, put them in holding registers and write slave registers.
-        if(if_ref_updated==1)
-        {
-            if_ref_updated=0;
-            calc_rod_length(home_trans,home_orient);
-            int index=0;
-            // get the to be transmitted string
-            for(i=0; i < 6; i++){
-                            string[index++] = (*(dataPtr + i) & 0xFF00) >> 8;
-                            string[index++] = (*(dataPtr + i) & 0x00FF);
-            }
-            //TODO need to set up serial for sending data
-            //Baudrade etc.
-            serial_transmitData(string,12);
-
-            //mb.requester.generate(&mb);
-            //mb.loopStates(&mb);
-
-        }
-
-
 
 	}
 
@@ -188,15 +149,44 @@ void main()
 __interrupt void cpu_timer1_isr(void)
 {
    CpuTimer1.InterruptCount++;
-   i++;
-   test_sine_ref[i] = (float)(sine_table[i])/4096;// use float without () throws error, expected an expression
-   real_sine_ref    = (float)(sine_table[i])/4096;
-   if(i==499)
-       {
-           i=0;
-       }
-   if_ref_updated =1;
+   interrupt_index++;
 
-   // The CPU acknowledges the interrupt.
+   //change this to change the reference sine wave
+   test_sine_ref[interrupt_index] = (float)(sine_table[interrupt_index])/4096;// use float without () throws error, expected an expression
+   real_sine_ref    = (float)(sine_table[interrupt_index])/4096;
+   if(interrupt_index==499)
+       {
+       interrupt_index=0;
+       }
+             // reference trans
+              trans[0]=0;
+              trans[1]=0;
+              trans[2]=0;
+             //
+             // reference orient
+              orient[0]=0;
+              orient[1]=0;
+              orient[2]=0;
+             //
+
+              trans[2]+=home_trans[2];
+              //calculate length
+              calc_rod_length(trans,orient);
+              int index=0;
+              //get the to be transmitted string
+              dataPtr = scaled_length;
+              for(i=0; i < 6; i++){
+                              string[index++] = (*(dataPtr + i) & 0xFF00) >> 8;
+                              string[index++] = (*(dataPtr + i) & 0x00FF);
+              }
+
+              // For test
+
+              //string[12]=0x5a;
+              //string[13]=0x5a;
+              //string[14]=0x5a;
+              //string[15]=0x5a;
+
+             SCIB.transmitData(string,12);
    EDIS;
 }

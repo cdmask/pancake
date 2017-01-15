@@ -167,7 +167,7 @@ void serial_transmitData(Uint16 *data, Uint16 size){          //TODO  how this w
 
 	for (i = 0; i < size; i++){
 	    // make sure last data is sent before another data is done
-	    while (ScibRegs.SCICTL2.bit.TXEMPTY != true) ;
+	    //while (ScibRegs.SCICTL2.bit.TXEMPTY != true) ;
 		ScibRegs.SCITXBUF= data[i];
 
 		//if(i%4 == 0){//TODO why 4?
@@ -175,7 +175,7 @@ void serial_transmitData(Uint16 *data, Uint16 size){          //TODO  how this w
 		//wait until TX buffer is empty before sending another byte
 		//use this to make sure no data will be written out without sending
 
-	    while (ScibRegs.SCICTL2.bit.TXEMPTY != true) ;
+	    //while (ScibRegs.SCICTL2.bit.TXEMPTY != true) ;
 		//}
 	}
 
@@ -202,6 +202,11 @@ bool serial_getRxError(){
 // Construct the Serial Module
 Serial construct_Serial(){
 	Serial serial;
+//  change this to change SCI setting
+    serial.baudrate=115200;
+    serial.bitsNumber=8;
+    serial.parityType = SERIAL_PARITY_NONE;
+//
 
 	serial.clear = serial_clear;
 	serial.rxBufferStatus = serial_rxBufferStatus;
