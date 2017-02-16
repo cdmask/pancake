@@ -94,7 +94,7 @@ void main()
 
 	   // change this to work with SCI data transfer
 	   // make this interrupt time a bit higher than the time it takes to transfer the data once
-	   ConfigCpuTimer(&CpuTimer1, 100, 10000);  // every 10ms one interrupt
+	   ConfigCpuTimer(&CpuTimer1, 100, 1000);  // every 10ms one interrupt
 
 
 	#endif
@@ -182,12 +182,24 @@ __interrupt void cpu_timer1_isr(void)
               }
 
               // For test
+              string[0]=0x5a;
+              string[1]=0x5a;
+              string[2]=0x5a;
+              string[3]=0x5a;
+              string[4]=0x5a;
+              string[5]=0x5a;
+              string[6]=0x5a;
+              string[7]=0x5a;
+              string[8]=0x5a;
+              string[9]=0x5a;
+              string[10]=0x5a;
+              string[11]=0x5a;
+              string[12]=0x5a;
+              string[13]=0x5a;
+              string[14]=0x5a;
+              string[15]=0x5a;
 
-              //string[12]=0x5a;
-              //string[13]=0x5a;
-              //string[14]=0x5a;
-              //string[15]=0x5a;
-
-             SCIB.transmitData(string,12);
-   EDIS;
+             //SCIB.transmitData(string,12);
+              SCIB.transmitData(string,1);
+              EDIS;
 }
