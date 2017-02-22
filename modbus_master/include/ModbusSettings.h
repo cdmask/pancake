@@ -41,7 +41,7 @@
 //#define LOW_SPEED_CLOCK 	15000000
 //#define LOW_SPEED_CLOCK     37500000
 // Serial settings ========================================
-#define SERIAL_BAUDRATE 	9600
+#define SERIAL_BAUDRATE 	115200
 #define SERIAL_PARITY 		SERIAL_PARITY_NONE
 #define SERIAL_BITS_NUMBER 	8
 

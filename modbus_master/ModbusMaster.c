@@ -13,6 +13,7 @@ ProfilingTool profiling;
 Uint64 ticks = 0;
 Uint64 abcd=0;
 
+/*
 void master_loopStates(ModbusMaster *self){
 	MB_MASTER_DEBUG();
 	switch (self->state) {
@@ -117,17 +118,7 @@ void master_request(ModbusMaster *self){
 	 self->serial.transmitData(transmitString,self->dataRequest.size);
 
 	//self->serial.transmitData(ptr1,11);
-   /* if(abcd == 0)
-    {
-	self->serial.transmitData(ptr, 10);
-    abcd = 1;
-    }
-    else
-    {
-    	self->serial.transmitData(ptr1, 10);
 
-        abcd = 0;
-    }*/
 
 	MB_MASTER_DEBUG();
 
@@ -258,3 +249,4 @@ ModbusMaster construct_ModbusMaster(){
 
 	return modbusMaster;
 }
+*/
