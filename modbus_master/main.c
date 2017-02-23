@@ -26,7 +26,7 @@ __interrupt void SCI_C_isr(void);
  Uint16 scaled_length[6];
  Uint16 string[16]={0};
 
-
+int index = 0;
 int i=0;
 int interrupt_index=0;
 int if_ref_updated=0;
@@ -194,7 +194,7 @@ __interrupt void cpu_timer1_isr(void)
               string[15]=0x5a;
 
               //SCIB.transmitData(&SCIB,string,1);
-              SCIC.transmitData(&SCIC,string,16);
+              //SCIC.transmitData(&SCIC,string,16);
               // For test
 
                //SCIB.transmitData(&SCIB,string,12);
@@ -206,5 +206,13 @@ __interrupt void cpu_timer1_isr(void)
 __interrupt void SCI_C_isr(void)
 {
     string[0] = ScicRegs.SCIRXBUF.all;
-    SCIC.transmitData(&SCIC,string,1);
+
+
+        SCIC.transmitData(&SCIC,string,1);
+
+        PieCtrlRegs.PIEACK.bit.ACK8=1; // write to clear acknowledge
+
+
+
+
 }
