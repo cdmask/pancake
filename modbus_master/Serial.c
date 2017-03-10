@@ -178,10 +178,10 @@ void serial_transmitData(Serial *self,Uint16 *data, Uint16 size){          //TOD
 
 	for (i = 0; i < size; i++){
 	    // make sure last data is sent before another data is done
-	    //while (ScibRegs.SCICTL2.bit.TXEMPTY != true) ;
+	    while (ScibRegs.SCICTL2.bit.TXEMPTY != true) ;
 		(*(self->SciRegs)).SCITXBUF= data[i];
 
-		//if(i%4 == 0){//TODO why 4?
+		//if(i%4 == 0){//TODO why 4? m/
 
 		//wait until TX buffer is empty before sending another byte
 		//use this to make sure no data will be written out without sending

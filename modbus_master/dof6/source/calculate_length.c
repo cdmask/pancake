@@ -68,7 +68,7 @@ for(j=0;j<6;j++)
 for(j=0;j<6;j++)
     {
         length[j]=sqrt(pow(leg_vector[j],2)+pow(leg_vector[j+6],2)+pow(leg_vector[j+2*6],2));
-        scaled_length[j] =(length[j]*10);// keep one decimal
+        scaled_length[j] =(length[j]);// keep one decimal
         //dataPtr[j]=scaled_length[j];
     }
 

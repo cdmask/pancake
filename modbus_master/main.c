@@ -92,7 +92,7 @@ void main()
 	// 100MHz CPU Freq, 1 second Period (in uSeconds)
 	// change this to work with SCI data transfer
 	// make this interrupt time a bit higher than the time it takes to transfer the data once
-	ConfigCpuTimer(&CpuTimer1, 100, 10000);  // every 10ms one interrupt
+	ConfigCpuTimer(&CpuTimer1, 100, 4000);  // every 10ms one interrupt
 
 
 	#endif
@@ -110,7 +110,7 @@ void main()
 	// Step 5. User specific code, enable interrupts:
     // CPU interrupt enable
 	   IER |= M_INT13;// this is timer 1 interrupt
-	   IER |= M_INT8; // this is for
+	//   IER |= M_INT8; // this is for SCIC RX
 
 	// Enable TINT0 in the PIE: Group 1 interrupt 7
 
@@ -144,12 +144,15 @@ void main()
 __interrupt void cpu_timer1_isr(void)
 {
    CpuTimer1.InterruptCount++;
-   interrupt_index++;
+
 
    //change this to change the reference sine wave
-   test_sine_ref[interrupt_index] = (float)(sine_table[interrupt_index])/4096;// use float without () throws error, expected an expression
+   //test_sine_ref[interrupt_index] = (float)(sine_table[interrupt_index])/4096;// use float without () throws error, expected an expression
+
    real_sine_ref    = (float)(sine_table[interrupt_index])/4096;
-   if(interrupt_index==499)
+   interrupt_index+=1;
+
+   if(interrupt_index>=500)
        {
        interrupt_index=0;
        }
@@ -169,14 +172,18 @@ __interrupt void cpu_timer1_isr(void)
               calc_rod_length(trans,orient);
               int index=0;
               //get the to be transmitted string
+
+              scaled_length[0]=312+60*real_sine_ref;
               dataPtr = scaled_length;
+
+
               for(i=0; i < 6; i++){
                               string[index++] = (*(dataPtr + i) & 0xFF00) >> 8;
                               string[index++] = (*(dataPtr + i) & 0x00FF);
               }
 
               // For test
-              string[0]=0x5a;
+              /*string[0]=0x5a;
               string[1]=0x5a;
               string[2]=0x5a;
               string[3]=0x5a;
@@ -191,13 +198,14 @@ __interrupt void cpu_timer1_isr(void)
               string[12]=0x5a;
               string[13]=0x5a;
               string[14]=0x5a;
-              string[15]=0x5a;
+              string[15]=0x5a;*/
 
-              //SCIB.transmitData(&SCIB,string,1);
+
+               //SCIB.transmitData(&SCIB,string,3);
               //SCIC.transmitData(&SCIC,string,16);
               // For test
 
-               //SCIB.transmitData(&SCIB,string,12);
+               SCIB.transmitData(&SCIB,string,12);
                //SCIC.transmitData(&SCIC,string,12);
 
               EDIS;
@@ -205,14 +213,7 @@ __interrupt void cpu_timer1_isr(void)
 // Receive data from PC
 __interrupt void SCI_C_isr(void)
 {
-    string[0] = ScicRegs.SCIRXBUF.all;
-
-
+        string[0] = ScicRegs.SCIRXBUF.all;
         SCIC.transmitData(&SCIC,string,1);
-
         PieCtrlRegs.PIEACK.bit.ACK8=1; // write to clear acknowledge
-
-
-
-
 }
