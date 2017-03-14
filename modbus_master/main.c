@@ -81,7 +81,7 @@ void main()
 
 	    // change this to work with SCI data transfer
 	    // make this interrupt time a bit higher than the time it takes to transfer the data once
-	   ConfigCpuTimer(&CpuTimer1, 150, 1000);
+	   ConfigCpuTimer(&CpuTimer1, 150, 4000);// 4ms transmit
 
 
 	   //ConfigCpuTimer(&CpuTimer2, 150, 1000000);
@@ -167,13 +167,18 @@ __interrupt void cpu_timer1_isr(void)
               orient[2]=0;
              //
               //for 5 cm sine movement
-              trans[2]+=home_trans[2]+50*real_sine_ref;
+              trans[2]+=home_trans[2]+40*real_sine_ref;
               //calculate length
               calc_rod_length(trans,orient);
               int index=0;
               //get the to be transmitted string
 
-              scaled_length[0]=312+60*real_sine_ref;
+              scaled_length[0]=317+50*real_sine_ref;
+              scaled_length[1]=317+50*real_sine_ref;
+              scaled_length[2]=317+50*real_sine_ref;
+              scaled_length[3]=317+50*real_sine_ref;
+              scaled_length[4]=317+50*real_sine_ref;
+              scaled_length[5]=317+50*real_sine_ref;
               dataPtr = scaled_length;
 
 
@@ -198,8 +203,8 @@ __interrupt void cpu_timer1_isr(void)
               string[12]=0x5a;
               string[13]=0x5a;
               string[14]=0x5a;
-              string[15]=0x5a;*/
-
+              string[15]=0x5a;
+*/
 
                //SCIB.transmitData(&SCIB,string,3);
               //SCIC.transmitData(&SCIC,string,16);
