@@ -1,5 +1,5 @@
 #include "lookup_table.h"
-#include "ModbusMaster.h"
+#include "Serial.h"
 #include "DSP2833x_GlobalPrototypes.h"
 #include "DSP2833x_Device.h"
 #include "DSP2833x_Examples.h"
@@ -30,7 +30,6 @@ int index = 0;
 int i=0;
 int interrupt_index=0;
 int if_ref_updated=0;
-//ModbusMaster mb;
 Serial SCIB,SCIC;
 Uint16 *dataPtr;
 

@@ -5,7 +5,7 @@ extern float32 servo_attach_B[18];
 extern float32 length[6];
 extern float32 trans[3],orient[3];
 extern int16   scaled_length[6];
-extern ModbusMaster mb;
+//extern ModbusMaster mb;
 
 void calc_rod_length(float32 trans[3],float32 orient[3])
 {
