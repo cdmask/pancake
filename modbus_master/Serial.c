@@ -1,6 +1,6 @@
 #include "DSP2833x_Device.h"     // DSP2833x Header file Include File
 #include "Serial.h"
-#include "Log.h"
+//#include "Log.h"
 #include "ModbusSettings.h"
 
 
@@ -11,7 +11,7 @@
 void serial_clear(Serial *self){
 	static unsigned short i, destroyFifo;
 
-	SERIAL_DEBUG();
+	//SERIAL_DEBUG();
 
 	// Reset Serial in case of error
 	if((*(self->SciRegs)).SCIRXST.bit.RXERROR == true){
@@ -37,13 +37,13 @@ Uint16 serial_rxBufferStatus(Serial *self){
 
 // Enable or disable RX (receiver)
 void serial_setSerialRxEnabled(Serial *self,bool status){
-	SERIAL_DEBUG();
+	//SERIAL_DEBUG();
 	(*(self->SciRegs)).SCICTL1.bit.RXENA = status;
 }
 
 // Enable or disable TX (trasmiter)
 void serial_setSerialTxEnabled(Serial *self,bool status){
-	SERIAL_DEBUG();
+	//SERIAL_DEBUG();
 	(*(self->SciRegs)).SCICTL1.bit.TXENA = status;
 
 }
@@ -168,13 +168,13 @@ void serial_init(Serial *self){
 	(*(self->SciRegs)).SCIFFTX.bit.SCIRST = 0;
 	(*(self->SciRegs)).SCIFFTX.bit.SCIRST = 1;
 EDIS;
-	SERIAL_DEBUG();
+	//SERIAL_DEBUG();
 }
 
 // Transmit variable data based on passed size
 void serial_transmitData(Serial *self,Uint16 *data, Uint16 size){          //TODO  how this works?
 	static unsigned short i = 0;                               //
-	SERIAL_DEBUG();                                            //
+	//SERIAL_DEBUG();                                            //
 
 	for (i = 0; i < size; i++){
 	    // make sure last data is sent before another data is done
@@ -196,7 +196,7 @@ void serial_transmitData(Serial *self,Uint16 *data, Uint16 size){          //TOD
 
 // Read data from buffer (byte per byte)
 Uint16 serial_getRxBufferedWord(Serial *self){
-	SERIAL_DEBUG();
+	//SERIAL_DEBUG();
 
 	// TODO: check if it is needed
 	while (ScibRegs.SCIRXST.bit.RXRDY) ;//buffer cleared, ready to receive
@@ -205,7 +205,7 @@ Uint16 serial_getRxBufferedWord(Serial *self){
 }
 
 bool serial_getRxError(Serial *self){
-	SERIAL_DEBUG();
+	//SERIAL_DEBUG();
 
 	return (*(self->SciRegs)).SCIRXST.bit.RXERROR;
 }
@@ -246,7 +246,7 @@ Serial construct_Serial(SCIPort port,Uint32 baudRate,Uint16 bitsNumber){
 
 	serial.fifoWaitBuffer = 0;
 
-	SERIAL_DEBUG();
+	//SERIAL_DEBUG();
 
 	return serial;
 }

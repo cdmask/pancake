@@ -1,7 +1,7 @@
 #include "DSP2833x_Device.h"     // DSP2833x Headerfile Include File
 #include "DSP2833x_CpuTimers.h"
 #include "Timer.h"
-#include "Log.h"
+//#include "Log.h"
 #include "ModbusSettings.h"
 
 struct CPUTIMER_VARS CpuTimer0;
